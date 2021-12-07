@@ -33,8 +33,8 @@ target_link_libraries(sim ${Geant4_LIBRARIES})
 
 ##execute_process(COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/script ${EXECUTABLE_OUTPUT_PATH}/re)
 
-add_custom_command(TARGET sim PRE_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy_directory
-                       ${CMAKE_SOURCE_DIR}/script/ $<TARGET_FILE_DIR:sim>)
+##add_custom_command(TARGET sim PRE_BUILD
+ ##                  COMMAND ${CMAKE_COMMAND} -E copy_directory
+ ##                      ${CMAKE_SOURCE_DIR}/script/ $<TARGET_FILE_DIR:sim>)
 
 install(TARGETS sim DESTINATION bin)

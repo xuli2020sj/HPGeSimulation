@@ -1,15 +1,3 @@
-/*
- * @Author: mikey.zhaopeng
- * @Date: 2021-12-06 02:18:58
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2021-12-06 02:19:49
- */
-/*
- * @Author: mikey.zhaopeng
- * @Date: 2021-12-06 02:18:57
- * @Last Modified by:   mikey.zhaopeng
- * @Last Modified time: 2021-12-06 02:18:57
- */
 /**
  * @file simulation.cpp
  * @author xl (xuli2020sj@gmail.com)
@@ -44,6 +32,7 @@
 
 
 #include "DetectorConstruction.h"
+#include "ActionInitialization.h"
 
 //#include "PhyscisList.hh"
 
@@ -81,10 +70,8 @@ int main(int argc, char **argv)
     physicsList->SetVerboseLevel(1);
     runManager->SetUserInitialization(physicsList);
 
-    
-
-    // ActionInitialization *actionInitialization = new ActionInitialization();
-    // runManager->SetUserInitialization(actionInitialization);
+    ActionInitialization *actionInitialization = new ActionInitialization();
+    runManager->SetUserInitialization(actionInitialization);
 
 #ifdef G4VIS_USE
     G4VisManager *visManager = new G4VisExecutive;
