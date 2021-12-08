@@ -34,12 +34,10 @@
 #include "G4ios.hh"
 
 #include "DetectorMessenger.h"
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4ThreadLocal
 	G4GlobalMagFieldMessenger *DetectorConstruction::fMagFieldMessenger = 0;
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 DetectorConstruction::DetectorConstruction()
 	: G4VUserDetectorConstruction(), physiWorld(0), stepLimit(0), fCheckOverlaps(true), flagPbShield(true), flagCollimator(true), flagSample(true)
@@ -120,15 +118,15 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
 		this->ConstructSample(pLV);
 	if (flagCollimator == true)
 		this->ConstructCollimator(pLV);
+	if (true) {
+		this->ConstructGammaBox(pLV);
+	}
 	return physiWorld;
 }
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 G4VPhysicalVolume *DetectorConstruction::ConstructWorld()
 {
-	//--------- Definitions of Solids, Logical Volumes, Physical Volumes ---------
-	//------------------------------
-	// World
-	//------------------------------
+
 	G4double fWorldLength = 10.2 * Shield_Length;
 	G4double HalfWorldLength = 0.5 * fWorldLength;
 
@@ -152,7 +150,11 @@ G4VPhysicalVolume *DetectorConstruction::ConstructWorld()
 													fCheckOverlaps);
 	return phyWorld;
 }
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void ConstructGammaBox(G4LogicalVolume* motherLogicalVolume) {
+	G4NistManager *nist = G4NistManager::Instance();
+	G4Material *lead = nist->FindOrBuildMaterial("G4_Pb");
+}
 
 G4VPhysicalVolume *DetectorConstruction::ConstructPbShield(G4LogicalVolume *motherLogicalVolume)
 {
@@ -241,8 +243,7 @@ G4VPhysicalVolume *DetectorConstruction::ConstructPbShield(G4LogicalVolume *moth
 	return PVShieldAir;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-// sample Geo
+
 void DetectorConstruction::ConstructSample(G4LogicalVolume *motherLogicalVolume)
 {
 	G4NistManager *nist = G4NistManager::Instance();
@@ -331,7 +332,7 @@ void DetectorConstruction::ConstructSample(G4LogicalVolume *motherLogicalVolume)
 	visAttSample->G4VisAttributes::SetForceSolid(true);
 	logSample->SetVisAttributes(visAttSample);
 }
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 #include "G4Cons.hh"
 #include "G4RotationMatrix.hh"
 void DetectorConstruction::ConstructCollimator(G4LogicalVolume *motherLogicalVolume)
