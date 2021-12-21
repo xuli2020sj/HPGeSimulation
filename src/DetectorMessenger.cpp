@@ -81,33 +81,33 @@ DetectorMessenger::~DetectorMessenger()
 
 void DetectorMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
 { 
-	if( command == fOutDeadLayerThicknessCmd )
-	{ fDetector->SetOutDeadLayerThickness(fOutDeadLayerThicknessCmd->GetNewDoubleValue(newValue));}
+	// if( command == fOutDeadLayerThicknessCmd )
+	// { fDetector->SetOutDeadLayerThickness(fOutDeadLayerThicknessCmd->GetNewDoubleValue(newValue));}
 
-	if( command == fSampleMoveCmd )
-	{ fDetector->SetSampleMove(fSampleMoveCmd ->GetNewDoubleValue(newValue));}
+	// if( command == fSampleMoveCmd )
+	// { fDetector->SetSampleMove(fSampleMoveCmd ->GetNewDoubleValue(newValue));}
 
-	if( command == fCollimatorMoveCmd)
-	{ fDetector->SetCollimatorMove(fCollimatorMoveCmd ->GetNewDoubleValue(newValue));}
+	// if( command == fCollimatorMoveCmd)
+	// { fDetector->SetCollimatorMove(fCollimatorMoveCmd ->GetNewDoubleValue(newValue));}
 
-	if(command == fFlagPbShieldCmd) 
-	{
-		fDetector->SetPbShield(fFlagPbShieldCmd->GetNewBoolValue(newValue));
-	}
+	// if(command == fFlagPbShieldCmd) 
+	// {
+	// 	fDetector->SetPbShield(fFlagPbShieldCmd->GetNewBoolValue(newValue));
+	// }
 
-	if(command == fFlagCollimatorCmd) 
-	{
-		fDetector->SetCollimator(fFlagCollimatorCmd->GetNewBoolValue(newValue));
-	}
+	// if(command == fFlagCollimatorCmd) 
+	// {
+	// 	fDetector->SetCollimator(fFlagCollimatorCmd->GetNewBoolValue(newValue));
+	// }
 
-	if(command == fFlagSampleCmd ) 
-	{
-		fDetector->SetSample(fFlagSampleCmd ->GetNewBoolValue(newValue));
-	}
-	if(command == fUpdateCmd ) 
-	{
-		fDetector->UpdateGeometry();
-	}
+	// if(command == fFlagSampleCmd ) 
+	// {
+	// 	fDetector->SetSample(fFlagSampleCmd ->GetNewBoolValue(newValue));
+	// }
+	// if(command == fUpdateCmd ) 
+	// {
+	// 	fDetector->UpdateGeometry();
+	// }
 
 }
 

@@ -21,12 +21,12 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   // default particle
 
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-  G4ParticleDefinition* particle = particleTable->FindParticle("proton");
+  G4ParticleDefinition* particle = particleTable->FindParticle("geantino");
 
-  particleGun->SetParticleDefinition(particle);
-  particleGun->SetParticlePosition(G4ThreeVector(0.,0.,0.));
-  particleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-  particleGun->SetParticleEnergy(1.3325*MeV);
+  // particleGun->SetParticleDefinition(particle);
+  // particleGun->SetParticlePosition(G4ThreeVector(0.,0.,0.));
+  // particleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+  // particleGun->SetParticleEnergy(1.3325*MeV);
   
 }
 
