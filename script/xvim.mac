@@ -1,7 +1,14 @@
-/vis/open OGL 600x600-0+0
+/control/verbose 2
+/run/verbose 2
+/gps/energy 1.332 MeV
+/gps/particle gamma
 
-/vis/viewer/set/autoRefresh false
-/vis/verbose errors
-#
-# Draw geometry:
-/vis/drawVolume
+/gps/pos/type Point
+/gps/position 0. 0. 80. mm
+/gps/pos/type Point
+/gps/position 0. 0. -15. mm
+/gps/ang/type iso
+/gps/ang/mintheta 150 deg
+/gps/ang/rot1 -1 0 0
+
+/run/beamOn 10000

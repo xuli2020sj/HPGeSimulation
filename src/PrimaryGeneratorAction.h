@@ -24,7 +24,7 @@ public:
 
 private:
 	G4ParticleGun* particleGun;
-	// G4GeneralParticleSource* theParticleSource;
+	G4GeneralParticleSource* theParticleSource;
 	// DetectorConstruction* myDetector;
 };
 

@@ -44,7 +44,7 @@ int main(int argc, char **argv)
  *
  */
 #ifdef G4MULTITHREADED
-    G4int nThreads = 2; // default number of thread
+    G4int nThreads = 4; // default number of thread
     G4MTRunManager *runManager = new G4MTRunManager;
 
     // Number of threads can be defined via 3rd argument
@@ -73,10 +73,7 @@ int main(int argc, char **argv)
     ActionInitialization *actionInitialization = new ActionInitialization();
     runManager->SetUserInitialization(actionInitialization);
 
-#ifdef G4VIS_USE
-    G4VisManager *visManager = new G4VisExecutive;
-    visManager->Initialize();
-#endif
+
 
     G4UImanager *UImanager = G4UImanager::GetUIpointer();
 
@@ -88,6 +85,11 @@ int main(int argc, char **argv)
     }
     else // interactive mode : define UI session
     {
+#ifdef G4VIS_USE
+    G4VisManager *visManager = new G4VisExecutive;
+    visManager->Initialize();
+#endif
+
 #ifdef G4UI_USE
         G4UIExecutive *ui = new G4UIExecutive(argc, argv);
 #ifdef G4VIS_USE
@@ -96,11 +98,12 @@ int main(int argc, char **argv)
         ui->SessionStart();
         delete ui;
 #endif
-    }
-
 #ifdef G4VIS_USE
     delete visManager;
 #endif
+    }
+
+
 
     return 0;
 }

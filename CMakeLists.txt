@@ -22,8 +22,8 @@ endif()
 #
 include_directories(${PROJECT_SOURCE_DIR}/src
                     ${Geant4_INCLUDE_DIR})
-file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cpp)
-file(GLOB headers ${PROJECT_SOURCE_DIR}/src/*.h)
+file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cpp ${PROJECT_SOURCE_DIR}/src/util/*.cpp)
+file(GLOB headers ${PROJECT_SOURCE_DIR}/src/*.h ${PROJECT_SOURCE_DIR}/src/util/*.h)
 
 #----------------------------------------------------------------------------
 

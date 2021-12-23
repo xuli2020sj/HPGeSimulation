@@ -70,7 +70,7 @@
 #
 
 #gps set
-#/gps/energy 1.332 MeV
+/gps/energy 18.332 MeV
 /gps/particle gamma
 
 /gps/pos/type Point
@@ -81,4 +81,4 @@
 /gps/ang/mintheta 150 deg
 /gps/ang/rot1 -1 0 0
 ###
-#/run/beamOn 5
+#/run/beamOn 5000
