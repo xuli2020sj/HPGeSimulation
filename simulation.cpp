@@ -33,6 +33,7 @@
 
 #include "DetectorConstruction.h"
 #include "ActionInitialization.h"
+#include "PhysicisList.h"
 
 //#include "PhyscisList.hh"
 
@@ -63,12 +64,12 @@ int main(int argc, char **argv)
     DetectorConstruction *detector = new DetectorConstruction;
     runManager->SetUserInitialization(detector);
 
-    //G4VModularPhysicsList *physicsList = new PhysicsList(); /*QGSP_BERT_HP;//FTFP_BERT;*/
-    //runManager->SetUserInitialization(physicsList);
-
-    G4VModularPhysicsList *physicsList = new QBBC;
-    physicsList->SetVerboseLevel(1);
+    G4VModularPhysicsList *physicsList = new PhysicsList(); /*QGSP_BERT_HP;//FTFP_BERT;*/
     runManager->SetUserInitialization(physicsList);
+
+    // G4VModularPhysicsList *physicsList = new QBBC;
+    // physicsList->SetVerboseLevel(1);
+    // runManager->SetUserInitialization(physicsList);
 
     ActionInitialization *actionInitialization = new ActionInitialization();
     runManager->SetUserInitialization(actionInitialization);

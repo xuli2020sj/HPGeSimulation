@@ -1,5 +1,4 @@
 #include "DetectorConstruction.h"
-//#include "SD.hh"
 
 #include "G4Material.hh"
 #include "G4Box.hh"
@@ -43,7 +42,7 @@
 DetectorConstruction::DetectorConstruction()
 	: G4VUserDetectorConstruction(), physiWorld(0), fCheckOverlaps(true)
 {
-		// Pb Shield
+	// Pb Shield
 	Shield_Length = 630. * mm;
 	Shield_rMax = 0.5 * 510. * mm;
 	Shield_Fe_Thickness = 9.5 * mm;
@@ -80,8 +79,6 @@ DetectorConstruction::DetectorConstruction()
 
 	DefineMaterials();
 	detectorMessenger = new DetectorMessenger(this);
-
-
 }
 
 DetectorConstruction::~DetectorConstruction()
@@ -109,9 +106,10 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
 	auto pLV = physiWorld->GetLogicalVolume();
 
 	this->ConstructHPGeDetector(pLV);
-	//this->ConstructGammaBox(pLV);
-
 	ConstructSDandField();
+	this->ConstructGammaBox(pLV);
+
+
 	return physiWorld;
 }
 
@@ -141,24 +139,56 @@ G4VPhysicalVolume *DetectorConstruction::ConstructWorld()
 
 void DetectorConstruction::ConstructGammaBox(G4LogicalVolume *motherLogicalVolume)
 {
+	G4int numOfX = 5;
+	G4int numOfY = 2 ;
+	G4int numOfZ = 3 ;
+
+	G4double xLength = 2438. * mm;
+	G4double yLength = 1926. * mm;
+	G4double zLength = 1331. * mm;
+
+	G4double xCellLength = xLength /numOfX;
+	G4double yCellLength = yLength /numOfY;
+	G4double zCellLength = zLength /numOfZ;
+
+
 	G4NistManager *nist = G4NistManager::Instance();
 	G4Material *concrete = nist->FindOrBuildMaterial("G4_CONCRETE");
-	G4VSolid *in_box = new G4Box("concrete_box", 2438. * mm, 1331. * mm, 1926. * mm);
+
+	G4VSolid *in_box = new G4Box("concrete_box", xCellLength/2, yCellLength/2, zCellLength/2);
 
 	G4LogicalVolume *logic_box = new G4LogicalVolume(in_box, concrete, "logic_box");
-
+	
 	G4double pos_x = 0.0 * meter;
 	G4double pos_y = 0.0 * meter;
 	G4double pos_z = 0.0 * meter;
 
-	G4VPhysicalVolume *boxPhys = new G4PVPlacement(0, // no rotation
-													   G4ThreeVector(pos_x, pos_y, pos_z),
-													   // translation position
-													   logic_box, // its logical volume
-													   "Tracker",  // its name
-													   motherLogicalVolume,   // its mother (logical) volume
-													   false,	   // no boolean operations
-													   0);		   // its copy number
+	for(G4int i = 0; i < numOfX; i++) {
+		for (G4int j = 0; j < numOfY; j++){
+			for (G4int k = 0; k < numOfZ; k++){
+				G4VPhysicalVolume* boxPhys = new G4PVPlacement(0,
+													G4ThreeVector(pos_x + i * xCellLength, 
+																pos_y + j * yCellLength, 
+																pos_z + k * zCellLength),
+													logic_box,
+													"cell",
+													motherLogicalVolume,
+													false,
+													i*100 + j * 10 + k,
+													true
+													);
+			}			
+		}	
+	}
+
+
+	// G4VPhysicalVolume *boxPhys = new G4PVPlacement(0, // no rotation
+	// 											G4ThreeVector(pos_x, pos_y, pos_z), // translation position
+	// 											logic_box, // its logical volume
+	// 											"box",  // its name
+	// 											motherLogicalVolume,   // its mother (logical) volume
+	// 											false,	   // no boolean operations
+	// 											0);		   // its copy number
 
 	G4VisAttributes *visAttCollimator = new G4VisAttributes(G4Colour(0.3, 0.6, 1.0, 0.7));
 	visAttCollimator->G4VisAttributes::SetForceSolid(true);
@@ -166,7 +196,7 @@ void DetectorConstruction::ConstructGammaBox(G4LogicalVolume *motherLogicalVolum
 }
 
 void DetectorConstruction::ConstructHPGeDetector(G4LogicalVolume* motherLogicalVolume) {
-		G4NistManager *nist = G4NistManager::Instance();
+	G4NistManager *nist = G4NistManager::Instance();
 	G4Material *shellAl = nist->FindOrBuildMaterial("G4_Al");
 	G4Material *vacuum = nist->FindOrBuildMaterial("G4_Galactic");
 	G4Material *coverMat = nist->FindOrBuildMaterial("G4_PLEXIGLASS");
@@ -185,7 +215,6 @@ void DetectorConstruction::ConstructHPGeDetector(G4LogicalVolume* motherLogicalV
 	// G4LogicalVolume *logCover = new G4LogicalVolume(cover, coverMat, "logCover", 0, 0, 0);
 	// new G4PVPlacement(0, G4ThreeVector(0., 0., detectorMove + 0.5 * shellLength + 0.5 * coverThick), logCover, "physiCover",
 	// 				  motherLogicalVolume, false, 0, fCheckOverlaps);
-
 	// detector
 	G4VSolid *HPGe = new G4Tubs("HPGe",
 								0. * mm,
@@ -193,8 +222,12 @@ void DetectorConstruction::ConstructHPGeDetector(G4LogicalVolume* motherLogicalV
 								0.5 * shellLength,
 								sphi,
 								dphi);
+	auto mvVec = G4ThreeVector(1000., -1000., 0.);
+	G4RotationMatrix* roVec =  new G4RotationMatrix(0, 4.7123, 0);
 	G4LogicalVolume *logHPGe = new G4LogicalVolume(HPGe, vacuum, "logHPGe", 0, 0, 0);
-	new G4PVPlacement(0, G4ThreeVector(0., 0., detectorMove), logHPGe, "physiHPGe",
+
+	new G4PVPlacement(roVec, mvVec, 
+	logHPGe, "physiHPGe",
 					  motherLogicalVolume, false, 0, fCheckOverlaps);
 
 	// Crystal
@@ -325,11 +358,13 @@ void DetectorConstruction::ConstructHPGeDetector(G4LogicalVolume* motherLogicalV
 											 shell1, shell2, 0, G4ThreeVector(0., 0., 0.0));
 	G4LogicalVolume *logShell = new G4LogicalVolume(shell, shellAl, "logShell", 0, 0, 0);
 
-	new G4PVPlacement(0, G4ThreeVector(), logShell, "physiShell",
+	auto mv = G4ThreeVector(100, 100 ,100);
+	new G4PVPlacement(0, 
+					G4ThreeVector(), logShell, "physiShell",
 					  logHPGe, false, 0, fCheckOverlaps);
 
 	new G4PVPlacement(0,
-					  G4ThreeVector(0., 0., 0.5 * (shellLength + mylarThick) - shellThick - endGap),
+					 G4ThreeVector(0., 0., 0.5 * (shellLength + mylarThick) - shellThick - endGap),
 					  logMylar, "physiMylarLayer",
 					  logHPGe, false, 0, fCheckOverlaps);
 	new G4PVPlacement(0,

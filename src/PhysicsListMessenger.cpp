@@ -1,6 +1,7 @@
-#include "PhysicsListMessenger.h"
 
-#include "PhysicsList.h"
+#include "PhysicsListMessenger.h"
+#include "PhysicisList.h"
+
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithAString.hh"
@@ -53,8 +54,6 @@ PhysicsListMessenger::PhysicsListMessenger(PhysicsList* pPhys)
   fPackageListCmd->AvailableForStates(G4State_PreInit);
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 PhysicsListMessenger::~PhysicsListMessenger()
 {
   delete fGammaCutCmd;
@@ -65,8 +64,6 @@ PhysicsListMessenger::~PhysicsListMessenger()
   delete fPhysDir;
 delete fPackageListCmd;
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void PhysicsListMessenger::SetNewValue(G4UIcommand* command,
                                           G4String newValue)
@@ -94,5 +91,3 @@ void PhysicsListMessenger::SetNewValue(G4UIcommand* command,
 if( command == fPackageListCmd )
    { fPhysicsList->AddPackage(newValue);}
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

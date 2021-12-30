@@ -2,7 +2,7 @@
 
 #include "PhysicsListMessenger.h"
  
-//#include "PhysListEmStandard.hh"
+#include "PhysListEmStandard.h"
 #include "G4EmStandardPhysics.hh"
 #include "G4EmStandardPhysics_option1.hh"
 #include "G4EmStandardPhysics_option2.hh"
@@ -14,8 +14,6 @@
 #include "G4LossTableManager.hh"
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PhysicsList::PhysicsList() 
 : G4VModularPhysicsList(),fCutForGamma(0),fCutForElectron(0),fCutForPositron(0),
