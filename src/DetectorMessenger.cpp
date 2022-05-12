@@ -44,24 +44,44 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction *Det)
 	fFlagPbShieldCmd->SetParameterName("flagPbShield", false);
 	fFlagPbShieldCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 
-	fFlagSampleCmd = new G4UIcmdWithABool("/HPGe_simulation/det/setSample", this);
+	fFlagSampleCmd = new G4UIcmdWithABool("/HPGe_simulat0ion/det/setSample", this);
 	fFlagSampleCmd->SetGuidance("add Sample .");
 	fFlagSampleCmd->SetParameterName("flagSample", false);
 	fFlagSampleCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 
-	fFlagCollimatorCmd = new G4UIcmdWithABool("/HPGe_simulation/det/setCollimator", this);
-	fFlagCollimatorCmd->SetGuidance("add Collimator .");
-	fFlagCollimatorCmd->SetParameterName("flagCollimator", false);
-	fFlagCollimatorCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+//	fFlagCollimatorCmd = new G4UIcmdWithABool("/HPGe_simulation/det/setCollimator", this);
+//	fFlagCollimatorCmd->SetGuidance("add Collimator .");
+//	fFlagCollimatorCmd->SetParameterName("flagCollimator", false);
+//	fFlagCollimatorCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 
 	fUpdateCmd = new G4UIcmdWithoutParameter("/HPGe_simulation/det/update", this);
 	fUpdateCmd->SetGuidance("Update geometry.");
 	fUpdateCmd->SetGuidance("This command MUST be applied before \"beamOn\" ");
 	fUpdateCmd->SetGuidance("if you changed geometrical value(s).");
-	fUpdateCmd->AvailableForStates(G4State_Idle);
+	fUpdateCmd->AvailableForStates(G4State_Idle,G4State_PreInit);
+
+    fDetectorMoveXCmd = new G4UIcmdWithADoubleAndUnit("/HPGe_simulation/det/setDetectorMoveX", this);
+    fDetectorMoveXCmd->SetGuidance("Set DetectorMoveX .");
+    fDetectorMoveXCmd->SetParameterName("DetectorMoveX", false);
+    fDetectorMoveXCmd->SetDefaultUnit("mm");
+    fDetectorMoveXCmd->SetUnitCategory("Length");
+    fDetectorMoveXCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
+    fDetectorMoveYCmd = new G4UIcmdWithADoubleAndUnit("/HPGe_simulation/det/setDetectorMoveY", this);
+    fDetectorMoveYCmd->SetGuidance("Set DetectorMoveY .");
+    fDetectorMoveYCmd->SetParameterName("DetectorMoveY", false);
+    fDetectorMoveYCmd->SetDefaultUnit("mm");
+    fDetectorMoveYCmd->SetUnitCategory("Length");
+    fDetectorMoveYCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
+    fDetectorMoveZCmd = new G4UIcmdWithADoubleAndUnit("/HPGe_simulation/det/setDetectorMoveZ", this);
+    fDetectorMoveZCmd->SetGuidance("Set DetectorMoveZ .");
+    fDetectorMoveZCmd->SetParameterName("DetectorMoveZ", false);
+    fDetectorMoveZCmd->SetDefaultUnit("mm");
+    fDetectorMoveZCmd->SetUnitCategory("Length");
+    fDetectorMoveZCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 DetectorMessenger::~DetectorMessenger()
 {
@@ -73,20 +93,34 @@ DetectorMessenger::~DetectorMessenger()
 	delete fFlagCollimatorCmd;
 	delete fFlagSampleCmd;
 	delete fUpdateCmd;
+    delete fDetectorMoveXCmd;
+    delete fDetectorMoveYCmd;
+    delete fDetectorMoveZCmd;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void DetectorMessenger::SetNewValue(G4UIcommand *command, G4String newValue)
 {
 	// if( command == fOutDeadLayerThicknessCmd )
-	// { fDetector->SetOutDeadLayerThickness(fOutDeadLayerThicknessCmd->GetNewDoubleValue(newValue));}
+	// { 
+	// 	fDetector->SetOutDeadLayerThickness(fOutDeadLayerThicknessCmd->GetNewDoubleValue(newValue));
+	// }
 
 	// if( command == fSampleMoveCmd )
 	// { fDetector->SetSampleMove(fSampleMoveCmd ->GetNewDoubleValue(newValue));}
 
-	// if( command == fCollimatorMoveCmd)
-	// { fDetector->SetCollimatorMove(fCollimatorMoveCmd ->GetNewDoubleValue(newValue));}
+	if( command == fCollimatorMoveCmd)
+	{ fDetector->SetCollimatorMove(G4UIcmdWithADoubleAndUnit::GetNewDoubleValue(newValue));}
+
+    if( command == fDetectorMoveXCmd) {
+        fDetector->SetDetectorMoveX(G4UIcmdWithADoubleAndUnit::GetNewDoubleValue(newValue));
+    }
+
+    if( command == fDetectorMoveYCmd)
+    { fDetector->SetDetectorMoveY(G4UIcmdWithADoubleAndUnit::GetNewDoubleValue(newValue));}
+
+    if( command == fDetectorMoveZCmd)
+    { fDetector->SetDetectorMoveZ(G4UIcmdWithADoubleAndUnit::GetNewDoubleValue(newValue));}
 
 	// if(command == fFlagPbShieldCmd)
 	// {
@@ -102,10 +136,10 @@ void DetectorMessenger::SetNewValue(G4UIcommand *command, G4String newValue)
 	// {
 	// 	fDetector->SetSample(fFlagSampleCmd ->GetNewBoolValue(newValue));
 	// }
-	// if(command == fUpdateCmd )
-	// {
-	// 	fDetector->UpdateGeometry();
-	// }
+	if(command == fUpdateCmd )
+	{
+		fDetector->UpdateGeometry();
+	}
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

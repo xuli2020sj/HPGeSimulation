@@ -10,7 +10,6 @@
 #include "G4EmStandardPhysics_option4.hh"
 #include "G4EmLivermorePhysics.hh"
 #include "G4EmPenelopePhysics.hh"
-
 #include "G4LossTableManager.hh"
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
@@ -28,7 +27,9 @@ PhysicsList::PhysicsList()
 
   fMessenger = new PhysicsListMessenger(this);
 
+    SetCutValue(0.0, "gamma");
   SetVerboseLevel(1);
+
 
   // EM physics
   fEmName = G4String("local");
@@ -142,7 +143,7 @@ void PhysicsList::ConstructParticle()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "G4EmProcessOptions.hh"
+//#include "G4EmProcessOptions.hh"
 
 void PhysicsList::ConstructProcess()
 {
@@ -159,8 +160,8 @@ void PhysicsList::ConstructProcess()
   // Main options and setting parameters are shown here.
   // Several of them have default values.
   //
-  G4EmProcessOptions emOptions;
-  
+//  G4EmProcessOptions emOptions;
+
   //physics tables
   //
   //emOptions.SetMinEnergy(100*eV);        //default    
@@ -168,13 +169,13 @@ void PhysicsList::ConstructProcess()
   //emOptions.SetDEDXBinning(12*20);        //default=12*7  
   //emOptions.SetLambdaBinning(12*20);        //default=12*7
 
-  emOptions.SetBuildCSDARange(true);     
-  emOptions.SetMaxEnergyForCSDARange(10*GeV);
-  //emOptions.SetDEDXBinningForCSDARange(12*20);
-  
-  //emOptions.SetSplineFlag(true);        //default
-     
-  emOptions.SetVerbose(0);  
+//  emOptions.SetBuildCSDARange(true);
+//  emOptions.SetMaxEnergyForCSDARange(10*GeV);
+//  //emOptions.SetDEDXBinningForCSDARange(12*20);
+//
+//  //emOptions.SetSplineFlag(true);        //default
+//
+//  emOptions.SetVerbose(0);
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 #include "G4PhysListFactory.hh"

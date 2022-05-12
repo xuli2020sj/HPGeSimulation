@@ -15,9 +15,9 @@ class DetectorMessenger: public G4UImessenger
 	public:
 
 		DetectorMessenger(DetectorConstruction* );
-		~DetectorMessenger();
+		~DetectorMessenger() override;
 
-		virtual void SetNewValue(G4UIcommand*, G4String);
+		void SetNewValue(G4UIcommand*, G4String) override;
 
 	private:
 
@@ -31,6 +31,11 @@ class DetectorMessenger: public G4UImessenger
 		G4UIcmdWithABool* fFlagCollimatorCmd;
 		G4UIcmdWithABool* fFlagSampleCmd ;
 		G4UIcmdWithoutParameter *fUpdateCmd;
+
+        G4UIcmdWithADoubleAndUnit* fDetectorMoveXCmd;
+        G4UIcmdWithADoubleAndUnit* fDetectorMoveYCmd;
+        G4UIcmdWithADoubleAndUnit* fDetectorMoveZCmd;
+
 };
 
 #endif

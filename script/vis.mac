@@ -1,84 +1,87 @@
-#
-# Macro file for the initialization phase of "exampleN02.cc"
-# when runing in interactive mode
-#
-# Sets some default verbose
-#
 /control/verbose 2
 /run/verbose 2
 
-/HPGe_simulation/det/setPbShield false
-##
-/run/numberOfThreads 3
+#/HPGe_simulation/det/setPbShield false
+
+#/HPGe_simulation/det/setCollimatorMove 500
+
+/run/numberOfThreads 8
 /run/initialize
-#
 
 /vis/open OGL 600x600-0+0
-#
-# Use this ore established:
-/vis/viewer/set/autoRefresh false
+/vis/viewer/set/autoRefresh true
 /vis/verbose errors
-#
-# Draw geometry:
+
 /vis/drawVolume
-#
-# Specify view angle:
-/vis/viewer/set/viewpointThetaPhi  45. -90.
-#
-# Specify zoom value:
+
+/vis/viewer/set/viewpointThetaPhi 2 45. 45.
+
 /vis/viewer/zoom 2.35
-#
-# Specify style (surface or wireframe):
-#/vis/viewer/set/style wireframe
-#
-# Draw coordinate axes:
-#/vis/scene/add/axes 0 0 0 0.35 m
-#
-# Draw smooth trajectories at end of event, showing trajectory points
-# as markers 2 pixels wide:
+
+/vis/viewer/set/style wireframe
+
+/vis/scene/add/axes 0 0 0 1000 mm
+
+
+
 /vis/scene/add/trajectories smooth
 /vis/modeling/trajectories/create/drawByCharge
 /vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
 /vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 1
-# (if too many tracks cause core dump => /tracking/storeTrajectory 0)
-#
-# Draw hits at end of event:
-#/vis/scene/add/hits
-#
-# To draw only gammas:
-#/vis/filtering/trajectories/create/particleFilter
-#/vis/filtering/trajectories/particleFilter-0/add gamma
-#
-# To invert the above, drawing all particles except gammas,
-# keep the above two lines but also add:
-#/vis/filtering/trajectories/particleFilter-0/invert true
-#
-# Many other options are available with /vis/modeling and /vis/filtering.
-# For example, to select colour by particle ID:
-#/vis/modeling/trajectories/create/drawByParticleID
-#/vis/modeling/trajectories/drawByParticleID-0/set e- blue
-#
-# To superimpose all of the events from a given run:
+#/tracking/storeTrajectory 10
 /vis/scene/endOfEventAction accumulate
-#
 # Re-establish auto refreshing and verbosity:
 /vis/viewer/set/autoRefresh true
 /vis/verbose warnings
-#
-# For file-based drivers, use this to create an empty detector view:
-#/vis/viewer/flush
-#
 
-#gps set
-/gps/energy 18.332 MeV
+
+
+
+#gps set Annulus
+
 /gps/particle gamma
+#/gps/energy 0.000661657 MeV
+/gps/energy 0.661657 MeV
+#/gps/pos/type Plane
+#/gps/pos/shape Annulus
+#/gps/pos/radius 26.25 cm
+#/gps/pos/inner_radius 25.25 cm
+#/gps/pos/centre 0.0 0. 0. cm
+#/gps/ang/type iso
 
+
+/gps/particle gamma
 /gps/pos/type Point
-/gps/position 0. 0. 80. mm
-/gps/pos/type Point
-#/gps/position 0. 0. -15. mm
+/gps/pos/centre 0. 30. 0. cm
 /gps/ang/type iso
-/gps/ang/mintheta 150 deg
-/gps/ang/rot1 -1 0 0
-###
-#/run/beamOn 5000
+/gps/energy 1.33 MeV
+
+
+
+#/gps/direction 0 -1 0
+
+#/gps/ang/maxtheta 45 deg
+#/gps/ang/mintheta 0
+#/gps/ang/minphi 0
+/gps/ang/maxphi 180 deg
+
+
+# volume source
+#/gps/pos/type Surface
+#/gps/pos/shape Para
+#/gps/pos/centre 1219. 963. 665.5. mm
+#/gps/pos/halfx 1219. mm
+#/gps/pos/halfy 963. mm
+#/gps/pos/halfz 665.5 mm
+
+
+
+
+#/vis/scene/endOfEventAction accumulate 10000
+/vis/ogl/set/displayListLimit 1000000
+
+
+
+#/run/beamOn 10
+
+

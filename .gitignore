@@ -1,2 +1,3 @@
-build/
-release/
+/build
+/cmake-build-debug
+/CMakeFiles

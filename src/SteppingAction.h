@@ -9,12 +9,13 @@
 class SteppingAction : public G4UserSteppingAction
 {
 private:
-    /* data */
+    EventAction* xEventAction;
 public:
     SteppingAction(EventAction* eventAction);
     ~SteppingAction();
 
-    virtual void UserSteppingAction(const G4Step*);
+    virtual void UserSteppingAction(const G4Step* step);
+
 };
 
 

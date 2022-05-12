@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
 set(CMAKE_CXX_STANDARD 11)
 
+#set(Geant4_DIR home/xl/Geant4/geant4.10.07.p03-install)
+#message("G4DIR = ${Geant4_DIR}")
+
 option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
 
 if(WITH_GEANT4_UIVIS)
@@ -14,7 +17,7 @@ endif()
 #----------------------------------------------------------------------------
 # Setup Geant4 include directories and compile definitions
 #
-##include(${Geant4_USE_FILE})
+include(${Geant4_USE_FILE})
 
 
 #----------------------------------------------------------------------------

@@ -35,15 +35,14 @@
 #include "ActionInitialization.h"
 #include "PhysicisList.h"
 
+#include "SteppingAction.h"
+#include "time.h"
 //#include "PhyscisList.hh"
 
 int main(int argc, char **argv)
 {
 
-/**
- * @brief 选择开启的线程数量，可通过命令行传入参数
- *
- */
+
 #ifdef G4MULTITHREADED
     G4int nThreads = 4; // default number of thread
     G4MTRunManager *runManager = new G4MTRunManager;
@@ -64,7 +63,10 @@ int main(int argc, char **argv)
     DetectorConstruction *detector = new DetectorConstruction;
     runManager->SetUserInitialization(detector);
 
-    G4VModularPhysicsList *physicsList = new PhysicsList(); /*QGSP_BERT_HP;//FTFP_BERT;*/
+    G4VModularPhysicsList *physicsList = new PhysicsList();
+//    G4VModularPhysicsList *physicsList = new QBBC;
+    physicsList->SetVerboseLevel(1);
+    /*QGSP_BERT_HP;//FTFP_BERT;*/
     runManager->SetUserInitialization(physicsList);
 
     // G4VModularPhysicsList *physicsList = new QBBC;
@@ -73,6 +75,7 @@ int main(int argc, char **argv)
 
     ActionInitialization *actionInitialization = new ActionInitialization();
     runManager->SetUserInitialization(actionInitialization);
+
 
 
 

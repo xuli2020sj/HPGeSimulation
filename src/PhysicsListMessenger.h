@@ -13,25 +13,19 @@ class G4UIcmdWithAString;
 class PhysicsListMessenger: public G4UImessenger
 {
   public:
-  
     PhysicsListMessenger(PhysicsList* );
    ~PhysicsListMessenger();
-
-    virtual    
-    void SetNewValue(G4UIcommand*, G4String);
+    virtual void SetNewValue(G4UIcommand*, G4String);
     
   private:
-  
     PhysicsList*               fPhysicsList;
-    
     G4UIdirectory*             fPhysDir;
     G4UIcmdWithADoubleAndUnit* fGammaCutCmd;
     G4UIcmdWithADoubleAndUnit* fElectCutCmd;
     G4UIcmdWithADoubleAndUnit* fProtoCutCmd;    
     G4UIcmdWithADoubleAndUnit* fAllCutCmd;
     G4UIcmdWithAString*        fListCmd;
-    G4UIcmdWithAString* fPackageListCmd; 
-    
+    G4UIcmdWithAString* fPackageListCmd;
 };
 
 #endif
