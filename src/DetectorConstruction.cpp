@@ -35,22 +35,20 @@
 #include "G4PhysicalVolumeStore.hh"
 #include "G4LogicalVolumeStore.hh"
 #include "G4SolidStore.hh"
-
 #include "DetectorMessenger.h"
 
 #include <cstdlib>
 #include <G4RunManager.hh>
 
 DetectorConstruction::DetectorConstruction()
-        : G4VUserDetectorConstruction(), physiWorld(nullptr), fCheckOverlaps(true) {
+        : G4VUserDetectorConstruction(){
 //	initQSDectector();
-    init9Dectector();
-    DefineMaterials();
+    G4double fWorldLength = 5 * m;
+    G4GeometryManager::GetInstance()->SetWorldMaximumExtent(fWorldLength);
     detectorMessenger = new DetectorMessenger(this);
 }
 
 void DetectorConstruction::initQSDectector() {
-
     coverThick = 3.0 * mm;
     // detector shell
     shellRadius = 0.5 * 76. * mm;
@@ -122,6 +120,42 @@ DetectorConstruction::~DetectorConstruction() {
     delete detectorMessenger;
 }
 
+//void DetectorConstruction::Construct200L(G4LogicalVolume *motherLogicalVolume) {
+//    G4ThreeVector posDrum_200L_matrix = G4ThreeVector(0 * cm, 74 * cm, 0 * cm); //如果是底部为0，则设置z为42.5cm
+//    G4double Drum_matrix_200L_pRMin = (0 / 2) * mm;
+//    G4double Drum_matrix_200L_pRMax = (560 / 2) * mm;
+//    G4double Drum_matrix_200L_pDz = (850 / 2) * mm; // 850
+//    G4double Drum_matrix_200L_pSPhi = 0 * deg;
+//    G4double Drum_matrix_200L_pDPhi = 360 * deg;
+//    G4VSolid
+//    G4Tubs *solidDrum_matrix_200L = new G4Tubs("200L_matrix_Drum", Drum_matrix_200L_pRMin, Drum_matrix_200L_pRMax,
+//                                               Drum_matrix_200L_pDz,
+//
+//                                               Drum_matrix_200L_pSPhi, Drum_matrix_200L_pDPhi);
+//
+//    // LogicalVolume
+//
+//    G4LogicalVolume *logicDrum_matrix_200L = new G4LogicalVolume(solidDrum_matrix_200L, // its solid
+//                                                                 Water,               // its material
+//                                                                 "200L_matrix_Drum");   // its name
+//
+//
+//    // PhysicalVolume
+//    new G4PVPlacement(0,                     // no rotation,0
+//                      posDrum_200L_matrix,     // at position
+//                      logicDrum_matrix_200L, // its logical volume
+//                      "200L_matrix_Drum",     // its name
+//                      motherLogicalVolume,     // its mother  volume
+//                      false,                 // no boolean operation
+//                      0,                     // copy number
+//                      true);                 // overlaps checking
+//
+//    G4VisAttributes *transblue = new G4VisAttributes(G4Colour(0.0, 0.0, 1.0));
+//    //  G4VisAttributes *transblue = new G4VisAttributes(G4Colour( 0.909804, 0.584314, 0.1176471, 0.2));
+//    transblue->SetForceSolid(true);
+//    logicDrum_matrix_200L->SetVisAttributes(transblue); // logical的颜色
+//}
+
 void DetectorConstruction::DefineMaterials() {
     G4NistManager *nistManager = G4NistManager::Instance();
     G4bool fromIsotopes = false;
@@ -140,33 +174,31 @@ void DetectorConstruction::DefineMaterials() {
 }
 
 G4VPhysicalVolume *DetectorConstruction::Construct() {
+    G4GeometryManager::GetInstance()->OpenGeometry();
+    G4LogicalVolumeStore::Clean();
+    G4SolidStore::Clean();
+    G4PhysicalVolumeStore::Clean();
+
+
+    init9Dectector();
+    DefineMaterials();
+
     physiWorld = this->ConstructWorld();
     auto pLV = physiWorld->GetLogicalVolume();
     this->DefineMaterials();
     this->ConstructHPGeDetector(pLV);
-//	 this->ConstructQSHPGeDetector(pLV);
-    ConstructSDandField();
-    // this->Construct200L(pLV);
     this->ConstructGammaBox(pLV);
-    // this->ConstructSurfaceSource(pLV);
     this->ConstructCollimator(pLV);
-
+//    this->Construct200L(pLV);
+//    ConstructSDandField();
     return physiWorld;
 }
 
 
 G4VPhysicalVolume *DetectorConstruction::ConstructWorld() {
-
-    G4double fWorldLength = 50 * m;
     G4double HalfWorldLength = 3 * m;
-
-    G4GeometryManager::GetInstance()->SetWorldMaximumExtent(fWorldLength);
-    // G4cout << "Computed tolerance = "
-    // 	   << G4GeometryTolerance::GetInstance()->GetSurfaceTolerance() / mm
-    // 	   << " mm" << G4endl;
-
     G4VSolid *solidWorld = new G4Box("world", HalfWorldLength, HalfWorldLength, HalfWorldLength);
-    auto *logicWorld = new G4LogicalVolume(solidWorld, Air, "LogicWorld", 0, 0, 0);
+    logicWorld = new G4LogicalVolume(solidWorld, Air, "LogicWorld", 0, 0, 0);
     G4VPhysicalVolume *phyWorld = new G4PVPlacement(0,                 // no rotation
                                                     G4ThreeVector(), // at (0,0,0)
                                                     logicWorld,         // its logical volume
@@ -180,30 +212,15 @@ G4VPhysicalVolume *DetectorConstruction::ConstructWorld() {
 }
 
 void DetectorConstruction::ConstructGammaBox(G4LogicalVolume *motherLogicalVolume) {
-//	G4int numOfX = 5;
-//	G4int numOfY = 2;
-//	G4int numOfZ = 3;
-
-//	G4double xLength = 2438. * mm;
-//	G4double yLength = 1926. * mm;
-//	G4double zLength = 1331. * mm;
-
     G4double xCellLength = xLength / numOfX;
     G4double yCellLength = yLength / numOfY;
     G4double zCellLength = zLength / numOfZ;
-
-//    G4NistManager *nist = G4NistManager::Instance();
-//    G4Material *concrete = nist->FindOrBuildMaterial("G4_CONCRETE");
-//    G4Material *concrete = nist->FindOrBuildMaterial("G4_WATER");
-
-    G4VSolid *in_box = new G4Box("concrete_box", xCellLength / 2, yCellLength / 2, zCellLength / 2);
-
-    G4LogicalVolume *logic_box = new G4LogicalVolume(in_box, concrete, "logic_box");
-
     G4double pos_x = xCellLength / 2;
     G4double pos_y = yCellLength / 2 + 500;
     G4double pos_z = zCellLength / 2;
 
+    G4VSolid *in_box = new G4Box("concrete_box", xCellLength / 2, yCellLength / 2, zCellLength / 2);
+    logic_box = new G4LogicalVolume(in_box, concrete, "logic_box");
     for (G4int i = 0; i < numOfX; i++) {
         for (G4int j = 0; j < numOfY; j++) {
             for (G4int k = 0; k < numOfZ; k++) {
@@ -235,100 +252,13 @@ void DetectorConstruction::ConstructGammaBox(G4LogicalVolume *motherLogicalVolum
     logic_box->SetVisAttributes(visAttBox);
 }
 
-void DetectorConstruction::Construct200L(G4LogicalVolume *motherLogicalVolume) {
-    G4ThreeVector posDrum_200L_matrix = G4ThreeVector(0 * cm, 0 * cm, 0 * cm); //如果是底部为0，则设置z为42.5cm
-    G4double Drum_matrix_200L_pRMin = (0 / 2) * mm;
-    G4double Drum_matrix_200L_pRMax = (560 / 2) * mm;
-    G4double Drum_matrix_200L_pDz = (850 / 2) * mm; // 850
-    G4double Drum_matrix_200L_pSPhi = 0 * deg;
-    G4double Drum_matrix_200L_pDPhi = 360 * deg;
-    G4Tubs *solidDrum_matrix_200L = new G4Tubs("200L_matrix_Drum", Drum_matrix_200L_pRMin, Drum_matrix_200L_pRMax,
-                                               Drum_matrix_200L_pDz,
-
-                                               Drum_matrix_200L_pSPhi, Drum_matrix_200L_pDPhi);
-
-    // LogicalVolume
-
-    G4LogicalVolume *logicDrum_matrix_200L = new G4LogicalVolume(solidDrum_matrix_200L, // its solid
-                                                                 Water,                   // its material
-                                                                 "200L_matrix_Drum");   // its name
-
-    // PhysicalVolume
-    new G4PVPlacement(0,                     // no rotation,0
-                      posDrum_200L_matrix,     // at position
-                      logicDrum_matrix_200L, // its logical volume
-                      "200L_matrix_Drum",     // its name
-                      motherLogicalVolume,     // its mother  volume
-                      false,                 // no boolean operation
-                      0,                     // copy number
-                      true);                 // overlaps checking
-
-    G4VisAttributes *transblue = new G4VisAttributes(G4Colour(0.0, 0.0, 1.0));
-    //  G4VisAttributes *transblue = new G4VisAttributes(G4Colour( 0.909804, 0.584314, 0.1176471, 0.2));
-    transblue->SetForceSolid(true);
-    logicDrum_matrix_200L->SetVisAttributes(transblue); // logical的颜色
-}
-
-void DetectorConstruction::ConstructSurfaceSource(G4LogicalVolume *motherLogicalVolume) {
-
-
-    G4double xCellLength = xLength / numOfX;
-    G4double yCellLength = yLength / numOfY;
-    G4double zCellLength = zLength / numOfZ;
-
-    G4double pos_x = xCellLength / 2;
-    G4double pos_y = yCellLength / 2;
-    G4double pos_z = zCellLength / 2;
-
-    G4NistManager *nist = G4NistManager::Instance();
-    G4Material *concrete = nist->FindOrBuildMaterial("G4_CONCRETE");
-
-    G4VSolid *in_box = new G4Box("source_box", xCellLength / 2, 1, zCellLength / 2);
-
-    G4LogicalVolume *logic_box = new G4LogicalVolume(in_box, concrete, "source");
-
-    for (G4int i = 0; i < numOfX; i++) {
-        for (G4int j = 0; j < numOfY; j++) {
-            for (G4int k = 0; k < numOfZ; k++) {
-                G4VPhysicalVolume *boxPhys = new G4PVPlacement(0,
-                                                               G4ThreeVector(pos_x + i * xCellLength,
-                                                                             pos_y + j * yCellLength + rand() % 300 -
-                                                                             150,
-                                                                             pos_z + k * zCellLength),
-                                                               logic_box,
-                                                               "cell",
-                                                               motherLogicalVolume,
-                                                               false,
-                                                               i * 100 + j * 10 + k,
-                                                               true);
-            }
-        }
-    }
-
-    // G4VPhysicalVolume* boxPhys = new G4PVPlacement(0,
-    // 										G4ThreeVector(xCellLength / 2,
-    // 													yCellLength/2,
-    // 													zCellLength/2),
-    // 										logic_box,
-    // 										"source",
-    // 										motherLogicalVolume,
-    // 										false,
-    // 										0,
-    // 										true
-    // 										);
-    G4VisAttributes *visAttCollimator = new G4VisAttributes(G4Colour(1.0, 0.1, 0.0, 0.7));
-    visAttCollimator->G4VisAttributes::SetForceSolid(true);
-    logic_box->SetVisAttributes(visAttCollimator);
-}
 
 void DetectorConstruction::ConstructHPGeDetector(G4LogicalVolume *motherLogicalVolume) {
-
     // MOVE DETECTOR!!!
     G4double revise = -(endGap + crystalHalfLength * 2);
     auto mv = G4ThreeVector(0. * mm, revise * mm, 0 * mm) + moveDetector;
     G4double sphi = 0. * deg;
     G4double dphi = 360. * deg;
-
     // Cover
     G4VSolid *cover = new G4Tubs("cover",
                                  0. * mm,
@@ -347,8 +277,8 @@ void DetectorConstruction::ConstructHPGeDetector(G4LogicalVolume *motherLogicalV
                                 sphi,
                                 dphi);
 
-    G4RotationMatrix *roVec = new G4RotationMatrix(0, 4.7123, 0);
-    G4LogicalVolume *logHPGe = new G4LogicalVolume(HPGe, vacuum, "logHPGe", 0, 0, 0);
+    auto *roVec = new G4RotationMatrix(0, 4.7123, 0);
+    auto *logHPGe = new G4LogicalVolume(HPGe, vacuum, "logHPGe", 0, 0, 0);
 
     new G4PVPlacement(roVec, mv,
                       logHPGe, "physiHPGe",
@@ -447,7 +377,7 @@ void DetectorConstruction::ConstructHPGeDetector(G4LogicalVolume *motherLogicalV
 
     G4LogicalVolume *logOuterDeadLayer = new G4LogicalVolume(outerDeadLayer, GeCrystal, "logOuterDeadLayer", 0, 0, 0);
     G4LogicalVolume *logInnerDeadLayer = new G4LogicalVolume(innerDeadLayer, GeCrystal, "logInnerDeadLayer", 0, 0, 0);
-    G4LogicalVolume *logActiveCrystal = new G4LogicalVolume(activeCrystal, GeCrystal, "logActiveCrystal", 0, 0, 0);
+    logActiveCrystal = new G4LogicalVolume(activeCrystal, GeCrystal, "logActiveCrystal", 0, 0, 0);
 
     // mylar
     G4VSolid *mylarLayer = new G4Tubs("mylarLayer",
@@ -517,20 +447,20 @@ void DetectorConstruction::ConstructHPGeDetector(G4LogicalVolume *motherLogicalV
     // 				  logHPGe, false, 0, fCheckOverlaps);
 
     // Detector Visualization Attributes
-    G4VisAttributes *HPGeVisAtt = new G4VisAttributes(G4Colour(1.0, 1.0, 0.00));
+    auto *HPGeVisAtt = new G4VisAttributes(G4Colour(1.0, 1.0, 0.00));
     logHPGe->SetVisAttributes(HPGeVisAtt);
 
-    G4VisAttributes *shellVisAtt = new G4VisAttributes(G4Colour(1.0, 0.0, 0.00));
+    auto *shellVisAtt = new G4VisAttributes(G4Colour(1.0, 0.0, 0.00));
     logShell->SetVisAttributes(shellVisAtt);
 
-    G4VisAttributes *CUPVisAtt = new G4VisAttributes(G4Colour(0.2, 1.0, 0.00));
+    auto *CUPVisAtt = new G4VisAttributes(G4Colour(0.2, 1.0, 0.00));
     logCUP->SetVisAttributes(CUPVisAtt);
 
-    G4VisAttributes *outerDeadLayerVisAtt = new G4VisAttributes(G4Colour(0.9, 1.0, 0.0, 0.80));
+    auto *outerDeadLayerVisAtt = new G4VisAttributes(G4Colour(0.9, 1.0, 0.0, 0.80));
     outerDeadLayerVisAtt->G4VisAttributes::SetForceSolid(true);
     logOuterDeadLayer->SetVisAttributes(outerDeadLayerVisAtt);
 
-    G4VisAttributes *activeCrystalVisAtt = new G4VisAttributes(G4Colour(0.0, 1.0, 0.3, 0.20));
+    auto *activeCrystalVisAtt = new G4VisAttributes(G4Colour(0.0, 1.0, 0.3, 0.20));
     activeCrystalVisAtt->G4VisAttributes::SetForceSolid(true);
     logActiveCrystal->SetVisAttributes(activeCrystalVisAtt);
 
@@ -607,7 +537,9 @@ void DetectorConstruction::ConstructCollimator(G4LogicalVolume *motherLogicalVol
 }
 
 void DetectorConstruction::ConstructSDandField() {
-    G4MultiFunctionalDetector *HPGeDetector = new G4MultiFunctionalDetector("HPGe");
+//    if (HPGeDetector != nullptr) return;
+    G4cerr << "fuckSD";
+    auto HPGeDetector = new G4MultiFunctionalDetector("HPGe");
     G4SDManager::GetSDMpointer()->AddNewDetector(HPGeDetector);
     G4VPrimitiveScorer *primitive = new G4PSEnergyDeposit("Edep");
     HPGeDetector->RegisterPrimitive(primitive);

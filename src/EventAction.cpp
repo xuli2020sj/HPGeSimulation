@@ -49,9 +49,6 @@ void EventAction::BeginOfEventAction(const G4Event *anEvent) {
 
 void EventAction::EndOfEventAction(const G4Event *anEvent)
 {
-//    xRunAction->setNumericEfficiency(numericEfficiency);
-//    G4cout << "event efficiency: " << numericEfficiency << G4endl;
-//    calculate();
 
     // xDataManager->FillSourceData(primary_energy / MeV);
     // G4double energyShield = 0.65 * MeV;
@@ -79,50 +76,6 @@ void EventAction::EndOfEventAction(const G4Event *anEvent)
     if (HPGeEdep > currEnergy - 1.5 * FWHM && HPGeEdep < currEnergy + 1.5 * FWHM) {
         xRunAction->AddValidCount();
     }
-//     if (HPGeEdep > 0.04484 && HPGeEdep < 0.0482) {
-//         xRunAction->AddValidCount();
-//     }
-    // if (HPGeEdep > 0.05784 && HPGeEdep < 0.06124) {
-    //     xRunAction->AddValidCount();
-    // }
-
-    // if (HPGeEdep > 0.08631 && HPGeEdep < 0.08975) {
-    //     xRunAction->AddValidCount();
-    // }
-
-    // if (HPGeEdep > 0.12032 && HPGeEdep < 0.12388) {
-    //     xRunAction->AddValidCount();
-    // }
-
-    // if (HPGeEdep > 0.16399 && HPGeEdep < 0.16771) {
-    //     xRunAction->AddValidCount();
-    // }
-
-    // if (HPGeEdep > 0.38945 && HPGeEdep < 0.39393) {
-    //     xRunAction->AddValidCount();
-    // }
-
-    // if (HPGeEdep > 0.89504 && HPGeEdep < .90108) {
-    //     xRunAction->AddValidCount();
-    // }
-
-//     if (HPGeEdep > 1.16986 && HPGeEdep < 1.17662) {
-//         xRunAction->AddValidCount();
-//     }
-
-    // if (HPGeEdep > 1.8319 && HPGeEdep < 1.84026) {
-    //     xRunAction->AddValidCount();
-    // }
-
-    // if (HPGeEdep > 0.65902 && HPGeEdep < 0.66438) {
-    //     xRunAction->AddValidCount();
-    // }
-
-
-    // if (HPGeEdep > energyShield)
-    // {
-    //     xDataManager->FillSDData(HPGeEdep / MeV);
-    // }W
 }
 
 inline G4double EventAction::GetSum(G4THitsMap<G4double> *hitsMap) const
@@ -139,7 +92,7 @@ inline G4double EventAction::GetSum(G4THitsMap<G4double> *hitsMap) const
 
 inline G4THitsMap<G4double> *EventAction::GetHitsCollection(G4int hcID, const G4Event *event) const
 {
-    G4THitsMap<G4double> *hitsCollection = static_cast<G4THitsMap<G4double> *>(
+    G4THitsMap<G4double> *hitsCollection = dynamic_cast<G4THitsMap<G4double> *>(
         event->GetHCofThisEvent()->GetHC(hcID));
     if (!hitsCollection) {
         G4ExceptionDescription msg;
@@ -158,7 +111,7 @@ void EventAction::setNumericEfficiency(G4double numericEfficiency) {
     EventAction::numericEfficiency = numericEfficiency;
 }
 
-void EventAction::addLenMap(std::string volume, G4double len) {
+void EventAction::addLenMap(const std::string& volume, G4double len) {
     if (lenMap.find(volume) == lenMap.end()) {
         lenMap[volume] = len;
     } else {
@@ -168,7 +121,7 @@ void EventAction::addLenMap(std::string volume, G4double len) {
 
 void EventAction::calculate() {
     G4double sumLen = 0;
-    for (auto n : lenMap) {
+    for (const auto& n : lenMap) {
         sumLen += n.second;
     }
     lenMap.clear();

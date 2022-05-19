@@ -13,7 +13,7 @@ DataManager::DataManager()	:fileName("HPGe_data")
 //	for (G4int k=0; k<MaxNtCol; k++) {
 //		fNtColId[k] = 0;
 //	}
-	ofstream.open("/home/x/Repo/HPGeSimulation/doc/log5_6.txt", std::ios::app);
+	ofstream.open("/home/x/code/HPGeSimulation/doc/log.txt", std::ios::app);
 	// Book();
 }
 

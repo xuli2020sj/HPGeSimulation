@@ -35,6 +35,7 @@
 #include "ActionInitialization.h"
 #include "PhysicisList.h"
 
+
 #include "SteppingAction.h"
 #include "time.h"
 //#include "PhyscisList.hh"
@@ -45,7 +46,7 @@ int main(int argc, char **argv)
 
 #ifdef G4MULTITHREADED
     G4int nThreads = 4; // default number of thread
-    G4MTRunManager *runManager = new G4MTRunManager;
+    auto *runManager = new G4MTRunManager;
 
     // Number of threads can be defined via 3rd argument
     if (argc == 3)
@@ -60,7 +61,8 @@ int main(int argc, char **argv)
     G4RunManager *runManager = new G4RunManager;
 #endif
 
-    DetectorConstruction *detector = new DetectorConstruction;
+
+    auto *detector = new DetectorConstruction;
     runManager->SetUserInitialization(detector);
 
     G4VModularPhysicsList *physicsList = new PhysicsList();

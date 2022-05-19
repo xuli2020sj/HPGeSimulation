@@ -1,29 +1,20 @@
 /control/verbose 2
 /run/verbose 2
 
-#/HPGe_simulation/det/setPbShield false
-
-#/HPGe_simulation/det/setCollimatorMove 500
+/HPGe_simulation/det/setDetectorMoveX 1219
+/HPGe_simulation/det/setDetectorMoveY 210
+/HPGe_simulation/det/setDetectorMoveZ 665.5
 
 /run/numberOfThreads 8
 /run/initialize
-
 /vis/open OGL 600x600-0+0
 /vis/viewer/set/autoRefresh true
 /vis/verbose errors
-
 /vis/drawVolume
-
 /vis/viewer/set/viewpointThetaPhi 2 45. 45.
-
 /vis/viewer/zoom 2.35
-
 /vis/viewer/set/style wireframe
-
 /vis/scene/add/axes 0 0 0 1000 mm
-
-
-
 /vis/scene/add/trajectories smooth
 /vis/modeling/trajectories/create/drawByCharge
 /vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
@@ -34,53 +25,7 @@
 /vis/viewer/set/autoRefresh true
 /vis/verbose warnings
 
-
-
-
-#gps set Annulus
-
-/gps/particle gamma
-#/gps/energy 0.000661657 MeV
-/gps/energy 0.661657 MeV
-#/gps/pos/type Plane
-#/gps/pos/shape Annulus
-#/gps/pos/radius 26.25 cm
-#/gps/pos/inner_radius 25.25 cm
-#/gps/pos/centre 0.0 0. 0. cm
-#/gps/ang/type iso
-
-
-/gps/particle gamma
-/gps/pos/type Point
-/gps/pos/centre 0. 30. 0. cm
-/gps/ang/type iso
-/gps/energy 1.33 MeV
-
-
-
-#/gps/direction 0 -1 0
-
-#/gps/ang/maxtheta 45 deg
-#/gps/ang/mintheta 0
-#/gps/ang/minphi 0
-/gps/ang/maxphi 180 deg
-
-
-# volume source
-#/gps/pos/type Surface
-#/gps/pos/shape Para
-#/gps/pos/centre 1219. 963. 665.5. mm
-#/gps/pos/halfx 1219. mm
-#/gps/pos/halfy 963. mm
-#/gps/pos/halfz 665.5 mm
-
-
-
-
-#/vis/scene/endOfEventAction accumulate 10000
 /vis/ogl/set/displayListLimit 1000000
-
-
 
 #/run/beamOn 10
 

@@ -30,8 +30,8 @@ void RunAction::EndOfRunAction(const G4Run *run)
 	accumulableManager->Merge();
     G4double validCountSum = validCount.GetValue();
     G4double energySum = energy.GetValue();
-
     if (isMaster) {
+        G4cerr << G4RunManager::GetRunManager()->GetSelectMacro();
         timer.Stop();
         G4int threadNum = 16;
         sPos.set(xPos.GetValue() / threadNum, yPos.GetValue()/ threadNum,zPos.GetValue()/ threadNum);

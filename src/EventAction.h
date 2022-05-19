@@ -32,7 +32,7 @@ private:
 public:
     G4double getNumericEfficiency() const;
     void setNumericEfficiency(G4double numericEfficiency);
-    void addLenMap(std::string volume, G4double len);
+    void addLenMap(const std::string& volume, G4double len);
     void calculate();
 
 public:
